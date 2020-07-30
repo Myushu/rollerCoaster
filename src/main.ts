@@ -41,7 +41,6 @@ function getPeopleOnTrain(data: InputData, currentPosition: number): [number, nu
     }
     if (currentPosition == data.nbGroup)
       currentPosition = 0;
-    // optimimisation ? multiplier le earnings par le nombre de fois que l'on va reset currentPosition
   }
   return [data.nbSeat - seatAvailable, currentPosition]
 }
@@ -56,8 +55,13 @@ function main() {
     var takenSeat = 0;
     [takenSeat, currentPosition] = getPeopleOnTrain(data, currentPosition);
     earnings += takenSeat * seatPrice;
-  }
 
+    // The queue order is the same as beginning.
+    if (currentPosition == 0) {
+      earnings = data.nbRun / run * earnings;
+      break;
+    }
+  }
   console.log(earnings);
 }
 
