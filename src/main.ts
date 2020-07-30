@@ -23,7 +23,7 @@ function getData(): InputData {
 }
 
 /**
- * Loads groups on the rolley coaster.
+ * Loads groups on the roller coaster.
  * @param {InputData} The input data
  * @param {number} The current queue position
  * @return {InputData} The number of taken seats on on rolley coaster
@@ -45,24 +45,52 @@ function getPeopleOnTrain(data: InputData, currentPosition: number): [number, nu
   return [data.nbSeat - seatAvailable, currentPosition]
 }
 
+/**
+ * Sums the earnings of each run
+ * @param  {[number} Passed runs
+ * @return {number} The total earnings for the given runs
+ */
+function getEarnings(runs: [number, number][]): number {
+  return runs.reduce((acc, value) => acc + value[1], 0);
+}
+
+/**
+ * Sums the earging based on the partial runs.
+ * This function is called when queue is twice on the same position.
+ * /!\ The earnings calculation seems to be broken. /!\
+ * @param {InputData} The input data
+ * @param {number} The number of passed runs
+ * @param {[number} Passed runs
+ */
+function findEarningsFromPartialRuns(data: InputData,
+  nbRun: number,
+  runs: [number, number][]
+  ): void {
+  var earnings = 0;
+
+  earnings = getEarnings(runs) * (Math.floor(data.nbRun / nbRun));
+  earnings += getEarnings(runs.slice(0, data.nbRun % nbRun))
+  console.log(earnings)
+}
+
 function main() {
   const data = getData();
-  var earnings: number = 0;
   var currentPosition: number = 0;
+  var passedRuns: [number, number][] = [];
   const seatPrice = 1;
 
   for (var run = 1; run <= data.nbRun; run++) {
     var takenSeat = 0;
     [takenSeat, currentPosition] = getPeopleOnTrain(data, currentPosition);
-    earnings += takenSeat * seatPrice;
+    passedRuns.push([currentPosition, takenSeat * seatPrice]);
 
-    // The queue order is the same as beginning.
-    if (currentPosition == 0) {
-      earnings = data.nbRun / run * earnings;
-      break;
+    // The queue order is in the same state as before
+    if (currentPosition in passedRuns.map(a => a[0])) {
+      findEarningsFromPartialRuns(data, run, passedRuns);
+      process.exit();
     }
   }
-  console.log(earnings);
+  console.log(getEarnings(passedRuns));
 }
 
 main();
