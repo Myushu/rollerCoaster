@@ -7,6 +7,10 @@ interface InputData {
   groups: number[];
 }
 
+/**
+ * Parses stdin and returns data on InputData object.
+ * @return {InputData} Data from stdin
+ */
 function getData(): InputData {
   var data: string[] = fs.readFileSync(0, 'utf-8').split('\n')
   const firstLine = data.shift().split(' ');
@@ -18,6 +22,13 @@ function getData(): InputData {
   };
 }
 
+/**
+ * Loads groups on the rolley coaster.
+ * @param {InputData} The input data
+ * @param {number} The current queue position
+ * @return {InputData} The number of taken seats on on rolley coaster
+ * @return {InputData}The new queue position
+ */
 function getPeopleOnTrain(data: InputData, currentPosition: number): [number, number] {
   var seatAvailable = data.nbSeat;
   while (seatAvailable != 0) {
