@@ -1,0 +1,17 @@
+{
+  "name": "roller-coaster",
+  "version": "0.0.0",
+  "description": "Ponicode technical test",
+  "main": "src/main.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^14.0.27"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/main.js",
+    "test": "sh test/run.sh"
+  },
+  "author": "Aljosha Armitano",
+  "license": "UNLICENSED"
+}
